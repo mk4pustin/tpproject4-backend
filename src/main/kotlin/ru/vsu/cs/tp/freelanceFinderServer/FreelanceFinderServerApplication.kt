@@ -1,11 +1,11 @@
-package ru.vsu.cs.tp.freelanceExchangeService
+package ru.vsu.cs.tp.freelanceFinderServer
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class FreelanceExchangeServiceApplication
+class FreelanceFinderServerApplication
 
 fun main(args: Array<String>) {
-	runApplication<FreelanceExchangeServiceApplication>(*args)
+	runApplication<FreelanceFinderServerApplication>(*args)
 }

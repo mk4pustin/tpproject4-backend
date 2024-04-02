@@ -1,1 +1,1 @@
-rootProject.name = "freelanceExchangeService"
+rootProject.name = "freelanceFinderServer"
