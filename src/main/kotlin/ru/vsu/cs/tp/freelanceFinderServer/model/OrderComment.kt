@@ -1,15 +1,19 @@
 package ru.vsu.cs.tp.freelanceFinderServer.model
 
 import User
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.JoinColumn
 
 @Entity
 data class OrderComment(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_comment_id")
-    val orderCommentId: Long,
+    val id: Long,
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "order_id")
@@ -22,4 +26,5 @@ data class OrderComment(
     val rating: Int,
 
     val description: String
+
 )

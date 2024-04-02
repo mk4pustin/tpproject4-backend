@@ -1,7 +1,12 @@
 package ru.vsu.cs.tp.freelanceFinderServer.model
 
 import User
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.JoinColumn
 import java.time.LocalDateTime
 
 @Entity
@@ -9,8 +14,7 @@ data class Claim(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "claim_id")
-    val claimId: Long,
+    val id: Long,
 
     @ManyToOne
     @JoinColumn(name = "initiator_id", referencedColumnName = "user_id")
@@ -30,11 +34,10 @@ data class Claim(
 
     val description: String,
 
-    @Column(name = "creation_date")
     val creationDate: LocalDateTime,
 
     val status: String,
 
-    @Column(name = "admin_comment")
     val adminComment: String?
+
 )

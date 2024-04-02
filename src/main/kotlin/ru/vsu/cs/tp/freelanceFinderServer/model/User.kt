@@ -1,6 +1,15 @@
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.Column
+import jakarta.persistence.Table
+import jakarta.persistence.OneToOne
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.JoinTable
 import ru.vsu.cs.tp.freelanceFinderServer.model.Order
-import ru.vsu.cs.tp.freelanceFinderServer.model.Response
 import ru.vsu.cs.tp.freelanceFinderServer.model.Scope
 import java.time.LocalDateTime
 
@@ -10,8 +19,7 @@ data class User(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    val userId: Long,
+    val id: Long,
 
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "role_id")
@@ -36,20 +44,18 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "scope_id")]
     )
-    val scopes: MutableList<Scope>,
+    val scopes: List<Scope>,
 
-    @Column(name = "about_me")
     val aboutMe: String?,
 
     val contact: String?,
 
-    @Column(name = "registration_date")
     val registrationDate: LocalDateTime,
 
-    @Column(name = "last_online")
     val lastOnline: LocalDateTime?,
 
     val rating: Double?,
 
     val skills: String?
+
 )

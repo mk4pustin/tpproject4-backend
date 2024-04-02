@@ -1,7 +1,14 @@
 package ru.vsu.cs.tp.freelanceFinderServer.model
 
 import User
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.OneToOne
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.JoinTable
+import jakarta.persistence.JoinColumn
 import java.time.LocalDateTime
 
 @Entity
@@ -9,8 +16,7 @@ data class Order(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
-    val orderId: Long,
+    val id: Long,
 
     @OneToOne(mappedBy = "lastOrder")
     @JoinColumn(name = "orderer_id", referencedColumnName = "user_id")
@@ -26,13 +32,18 @@ data class Order(
         joinColumns = [JoinColumn(name = "order_id")],
         inverseJoinColumns = [JoinColumn(name = "scope_id")]
     )
-    val scopes: MutableList<Scope>,
+    val scopes: List<Scope>,
+
     val price: Double,
+
     val description: String,
-    @Column(name = "creation_date")
+
     val creationDate: LocalDateTime,
-    @Column(name = "responses_count")
+
     val responsesCount: Int,
+
     val status: String,
+
     val skills: String
+
 )

@@ -1,7 +1,12 @@
 package ru.vsu.cs.tp.freelanceFinderServer.model
 
 import User
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.JoinColumn
 import java.time.LocalDateTime
 
 @Entity
@@ -9,8 +14,7 @@ data class Response(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "response_id")
-    val responseId: Long,
+    val id: Long,
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "order_id")
@@ -22,6 +26,6 @@ data class Response(
 
     val status: String,
 
-    @Column(name = "creation_date")
     val creationDate: LocalDateTime
+
 )
