@@ -1,6 +1,5 @@
 package ru.vsu.cs.tp.freelanceFinderServer.model
 
-import User
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
@@ -23,7 +22,7 @@ data class Scope(
     val userScopes: List<User>,
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     val category: Category,
 
     val name: String

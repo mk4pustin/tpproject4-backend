@@ -1,3 +1,6 @@
+package ru.vsu.cs.tp.freelanceFinderServer.model
+
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
@@ -9,9 +12,10 @@ import jakarta.persistence.Table
 import jakarta.persistence.OneToOne
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.JoinTable
-import ru.vsu.cs.tp.freelanceFinderServer.model.Order
-import ru.vsu.cs.tp.freelanceFinderServer.model.Scope
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDateTime
+import java.util.Collections
 
 @Entity
 @Table(name = "AppUser")
@@ -22,20 +26,23 @@ data class User(
     val id: Long,
 
     @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
     val role: Role,
 
     @OneToOne
-    @JoinColumn(name = "last_order_id", referencedColumnName = "order_id")
-    val lastOrder: Order,
+    @JoinColumn(name = "last_order_id", referencedColumnName = "id")
+    val lastOrder: Order? = null,
 
-    @Column(nullable = false)
+    @JvmField
+    @Column(name = "username", nullable = false)
     val username: String,
 
     @Column(nullable = false, unique = true)
     val email: String,
 
-    @Column(nullable = false)
+    @JvmField
+    @JsonIgnore
+    @Column(name = "password", nullable = false)
     val password: String,
 
     @ManyToMany
@@ -44,18 +51,48 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "scope_id")]
     )
-    val scopes: List<Scope>,
+    val scopes: List<Scope>? = null,
 
-    val aboutMe: String?,
+    var aboutMe: String? = null,
 
-    val contact: String?,
+    val contact: String? = null,
 
     val registrationDate: LocalDateTime,
 
-    val lastOnline: LocalDateTime?,
+    val lastOnline: LocalDateTime? = null,
 
-    val rating: Double?,
+    val rating: Double? = null,
 
-    val skills: String?
+    val skills: String? = null
 
-)
+): UserDetails {
+
+    override fun isAccountNonExpired(): Boolean {
+        return true
+    }
+
+    override fun isAccountNonLocked(): Boolean {
+        return true
+    }
+
+    override fun isCredentialsNonExpired(): Boolean {
+        return true
+    }
+
+    override fun isEnabled(): Boolean {
+        return true
+    }
+
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        return Collections.singletonList(role)
+    }
+
+    override fun getPassword(): String {
+        return password
+    }
+
+    override fun getUsername(): String {
+        return username
+    }
+
+}

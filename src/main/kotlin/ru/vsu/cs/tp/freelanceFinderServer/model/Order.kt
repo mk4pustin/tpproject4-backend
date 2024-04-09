@@ -1,6 +1,5 @@
 package ru.vsu.cs.tp.freelanceFinderServer.model
 
-import User
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
@@ -9,9 +8,11 @@ import jakarta.persistence.OneToOne
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.JoinTable
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.Table
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "AppOrder")
 data class Order(
 
     @Id
@@ -19,11 +20,11 @@ data class Order(
     val id: Long,
 
     @OneToOne(mappedBy = "lastOrder")
-    @JoinColumn(name = "orderer_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "freelancer_id", referencedColumnName = "id")
     val freelancer: User?,
 
     @OneToOne
-    @JoinColumn(name = "orderer_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "orderer_id", referencedColumnName = "id")
     val orderer: User,
 
     @ManyToMany

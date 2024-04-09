@@ -1,6 +1,5 @@
 package ru.vsu.cs.tp.freelanceFinderServer.model
 
-import User
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
@@ -16,11 +15,11 @@ data class OrderComment(
     val id: Long,
 
     @ManyToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
     val order: Order,
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     val user: User,
 
     val rating: Int,
