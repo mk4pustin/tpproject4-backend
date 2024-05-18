@@ -1,5 +1,6 @@
 package ru.vsu.cs.tp.freelanceFinderServer.service
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.vsu.cs.tp.freelanceFinderServer.dto.ClaimDTO
 import ru.vsu.cs.tp.freelanceFinderServer.model.Claim
@@ -11,11 +12,13 @@ import ru.vsu.cs.tp.freelanceFinderServer.repository.UserRepository
 import java.time.LocalDateTime
 
 @Service
-class UserService(
+class UserService @Autowired constructor(
+
     private val orderRepository: OrderRepository,
     private val userRepository: UserRepository,
     private val claimRepository: ClaimRepository,
     private val jwtService: JwtService
+
 ) {
 
     fun getActiveOrders(): List<Order> {

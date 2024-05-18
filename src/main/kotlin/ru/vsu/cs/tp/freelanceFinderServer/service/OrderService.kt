@@ -1,5 +1,6 @@
 package ru.vsu.cs.tp.freelanceFinderServer.service
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.vsu.cs.tp.freelanceFinderServer.dto.OrderDTO
@@ -11,11 +12,13 @@ import java.time.LocalDateTime
 
 @Service
 @Transactional
-class OrderService(
+class OrderService @Autowired constructor(
+
     private val orderRepository: OrderRepository,
     private val scopeRepository: ScopeRepository,
     private val userRepository: UserRepository,
     private val jwtService: JwtService
+
 ) {
 
     fun addOrder(orderDto: OrderDTO, token: String): Order {
@@ -39,4 +42,3 @@ class OrderService(
     }
 
 }
-
