@@ -15,11 +15,13 @@ import java.time.LocalDateTime
 
 @Service
 class AuthenticationService @Autowired constructor(
+
     private val repository: UserRepository,
     private val jwtService: JwtService,
     private val passwordEncoder: PasswordEncoder,
     private val authenticationManager: AuthenticationManager,
     private val roleRepository: RoleRepository
+
 ) {
 
     fun register(request: RegisterRequest): AuthenticationResponse {

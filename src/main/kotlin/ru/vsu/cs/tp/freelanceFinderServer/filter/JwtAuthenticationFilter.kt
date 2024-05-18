@@ -14,8 +14,10 @@ import ru.vsu.cs.tp.freelanceFinderServer.service.JwtService
 
 @Component
 class JwtAuthenticationFilter @Autowired constructor(
+    
     private val jwtService: JwtService,
     private val userDetailsService: UserDetailsService
+
 ) : OncePerRequestFilter() {
 
     override fun doFilterInternal(

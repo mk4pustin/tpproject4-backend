@@ -32,6 +32,8 @@ class SecurityConfig(
             .permitAll()
             .requestMatchers("/api/auth/**")
             .permitAll()
+            .requestMatchers("/api/client/**")
+            .hasAuthority("Client")
             .anyRequest()
             .authenticated()
             .and()

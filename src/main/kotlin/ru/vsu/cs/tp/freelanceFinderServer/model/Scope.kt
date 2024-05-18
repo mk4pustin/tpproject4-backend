@@ -1,5 +1,6 @@
 package ru.vsu.cs.tp.freelanceFinderServer.model
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.GeneratedValue
@@ -15,9 +16,11 @@ data class Scope(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "scopes")
     val orderScopes: List<Order>,
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "scopes")
     val userScopes: List<User>,
 
