@@ -46,7 +46,7 @@ class JwtService {
             .setClaims(extraClaims)
             .setSubject(userDetails.username)
             .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + 1000 * 60 * 24))
+            .setExpiration(Date(System.currentTimeMillis() + 1000 * 60 * 60))
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact()
     }
@@ -72,10 +72,9 @@ class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .body
-        } catch (_: ExpiredJwtException) {
-        } catch (_: MalformedJwtException) {
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to extract claims from token", e)
         }
-        return Jwts.claims()
     }
 
     private fun getSignInKey(): Key {

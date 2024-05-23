@@ -3,6 +3,7 @@ package ru.vsu.cs.tp.freelanceFinderServer.service
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.vsu.cs.tp.freelanceFinderServer.dto.ClaimDTO
+import ru.vsu.cs.tp.freelanceFinderServer.dto.UserDTO
 import ru.vsu.cs.tp.freelanceFinderServer.model.Claim
 import ru.vsu.cs.tp.freelanceFinderServer.model.Order
 import ru.vsu.cs.tp.freelanceFinderServer.model.User
@@ -53,6 +54,22 @@ class UserService @Autowired constructor(
             null
         )
         return claimRepository.save(claim)
+    }
+
+    fun updateUserProfile(userDto: UserDTO, token: String): User {
+        val curJwt = token.substring(7)
+        val username = jwtService.extractUsername(curJwt)
+        val user = userRepository.findByUsername(username).orElseThrow()
+
+        userDto.username?.let { user.username = it }
+        userDto.email?.let { user.email = it }
+        userDto.password?.let { user.password = it }
+        userDto.aboutMe?.let { user.aboutMe = it }
+        userDto.contact?.let { user.contact = it }
+        userDto.skills?.let { user.skills = it }
+
+        userRepository.save(user)
+        return user
     }
 
 }

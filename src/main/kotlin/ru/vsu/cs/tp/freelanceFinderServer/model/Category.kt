@@ -1,9 +1,6 @@
 package ru.vsu.cs.tp.freelanceFinderServer.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
+import jakarta.persistence.*
 
 @Entity
 data class Category(
@@ -13,5 +10,8 @@ data class Category(
     val id: Long,
 
     val name: String,
+
+    @OneToMany(mappedBy = "category")
+    var scopes: List<Scope>
 
 )

@@ -24,6 +24,7 @@ data class Scope(
     @ManyToMany(mappedBy = "scopes")
     val userScopes: List<User>,
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     val category: Category,
