@@ -11,13 +11,19 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
+import ru.vsu.cs.tp.freelanceFinderServer.model.User
+import ru.vsu.cs.tp.freelanceFinderServer.repository.UserRepository
 import java.security.Key
 import java.util.Date
 import java.util.function.Function
 import java.util.stream.Collectors
 
 @Service
-class JwtService {
+class JwtService(
+
+    private val userRepository: UserRepository
+
+) {
 
     @Value("\${jwt.secret}")
     private lateinit var SECRET_KEY: String
@@ -80,6 +86,12 @@ class JwtService {
     private fun getSignInKey(): Key {
         val keyBytes: ByteArray = Decoders.BASE64.decode(SECRET_KEY)
         return Keys.hmacShaKeyFor(keyBytes)
+    }
+
+    fun getAuthenticatedUser(token: String): User {
+        val curJwt = token.substring(7)
+        val username = extractUsername(curJwt)
+        return userRepository.findByUsername(username).orElseThrow()
     }
 
 }

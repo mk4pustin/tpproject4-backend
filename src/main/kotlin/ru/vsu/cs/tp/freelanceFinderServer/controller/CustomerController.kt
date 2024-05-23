@@ -1,6 +1,7 @@
 package ru.vsu.cs.tp.freelanceFinderServer.controller
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -10,7 +11,8 @@ import ru.vsu.cs.tp.freelanceFinderServer.service.OrderService
 
 @RestController
 @RequestMapping("/api/customer")
-@Tag(name = "Контроллер для заказчиков", description = "API для создания, обновления и удаления заказов")
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Контроллер для заказчиков", description = "API для создания, обновления и удаления заказов заказчиком")
 class CustomerController(
     private val orderService: OrderService
 ) {
@@ -33,7 +35,7 @@ class CustomerController(
     @Operation(summary = "Удаление заказа", description = "Удаляет существующий заказ для аутентифицированного заказчика")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteOrder(@RequestHeader("Authorization") token: String) {
-        orderService.deleteOrder(token)
+        orderService.deleteOwnOrder(token)
     }
 
 }

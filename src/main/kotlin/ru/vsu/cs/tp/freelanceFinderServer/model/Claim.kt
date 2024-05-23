@@ -25,7 +25,7 @@ data class Claim(
 
     @ManyToOne
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
-    val admin: User?,
+    var admin: User?,
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
@@ -35,8 +35,8 @@ data class Claim(
 
     val creationDate: LocalDateTime,
 
-    val status: String,
+    var status: String,
 
-    val adminComment: String?
+    var adminComment: String?
 
 )

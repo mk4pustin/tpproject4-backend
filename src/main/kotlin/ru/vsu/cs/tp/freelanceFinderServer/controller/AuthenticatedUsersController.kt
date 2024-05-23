@@ -1,6 +1,7 @@
 package ru.vsu.cs.tp.freelanceFinderServer.controller
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -8,20 +9,23 @@ import ru.vsu.cs.tp.freelanceFinderServer.dto.ClaimDTO
 import ru.vsu.cs.tp.freelanceFinderServer.dto.UserDTO
 import ru.vsu.cs.tp.freelanceFinderServer.model.Claim
 import ru.vsu.cs.tp.freelanceFinderServer.model.User
+import ru.vsu.cs.tp.freelanceFinderServer.service.ClaimService
 import ru.vsu.cs.tp.freelanceFinderServer.service.UserService
 
 @RestController
 @RequestMapping("/api/user")
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Контроллер для аутентифицированных пользователей", description = "API для создания заявок и обновления профиля пользователя")
 class AuthenticatedUsersController(
-    private val userService: UserService
+    private val userService: UserService,
+    private val claimService: ClaimService
 ) {
 
     @PostMapping("/createClaim")
     @Operation(summary = "Создание жалобы", description = "Создает новую жалобу")
     @ResponseStatus(HttpStatus.CREATED)
     fun addClaim(@RequestBody claimDto: ClaimDTO, @RequestHeader("Authorization") token: String): Claim {
-        return userService.addClaim(claimDto, token)
+        return claimService.addClaim(claimDto, token)
     }
 
     @PostMapping("/updateProfile")

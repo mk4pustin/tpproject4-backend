@@ -52,7 +52,7 @@ data class User(
         joinColumns = [JoinColumn(name = "user_id")],
         inverseJoinColumns = [JoinColumn(name = "scope_id")]
     )
-    val scopes: List<Scope>? = null,
+    var scopes: List<Scope>? = null,
 
     var aboutMe: String? = null,
 
