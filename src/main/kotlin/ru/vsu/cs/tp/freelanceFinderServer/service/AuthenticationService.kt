@@ -38,7 +38,7 @@ class AuthenticationService @Autowired constructor(
             null,
             null,
             LocalDateTime.now(),
-            null,
+            LocalDateTime.now(),
             null,
             null
         )
@@ -55,6 +55,8 @@ class AuthenticationService @Autowired constructor(
             )
         )
         val user = repository.findByUsername(request.username).orElseThrow()
+        user.lastOnline = LocalDateTime.now()
+        repository.save(user)
         val jwtToken = jwtService.generateToken(user)
         return AuthenticationResponse(jwtToken, user)
     }

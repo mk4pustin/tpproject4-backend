@@ -33,11 +33,11 @@ data class Order(
         joinColumns = [JoinColumn(name = "order_id")],
         inverseJoinColumns = [JoinColumn(name = "scope_id")]
     )
-    val scopes: List<Scope>,
+    var scopes: List<Scope>,
 
-    val price: Double,
+    var price: Double,
 
-    val description: String,
+    var description: String,
 
     val creationDate: LocalDateTime,
 
@@ -45,6 +45,6 @@ data class Order(
 
     val status: String,
 
-    val skills: String
+    var skills: String
 
 )

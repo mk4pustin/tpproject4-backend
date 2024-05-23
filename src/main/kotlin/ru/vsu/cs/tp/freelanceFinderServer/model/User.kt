@@ -29,21 +29,22 @@ data class User(
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     val role: Role,
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "last_order_id", referencedColumnName = "id")
-    val lastOrder: Order? = null,
+    var lastOrder: Order? = null,
 
     @JvmField
     @Column(name = "username", nullable = false)
-    val username: String,
+    var username: String,
 
     @Column(nullable = false, unique = true)
-    val email: String,
+    var email: String,
 
     @JvmField
     @JsonIgnore
     @Column(name = "password", nullable = false)
-    val password: String,
+    var password: String,
 
     @ManyToMany
     @JoinTable(
@@ -55,15 +56,15 @@ data class User(
 
     var aboutMe: String? = null,
 
-    val contact: String? = null,
+    var contact: String? = null,
 
     val registrationDate: LocalDateTime,
 
-    val lastOnline: LocalDateTime? = null,
+    var lastOnline: LocalDateTime? = null,
 
     val rating: Double? = null,
 
-    val skills: String? = null
+    var skills: String? = null
 
 ): UserDetails {
 

@@ -28,12 +28,12 @@ class SecurityConfig(
             .csrf()
             .disable()
             .authorizeHttpRequests()
+            .requestMatchers(*WHITELIST)
+            .permitAll()
             .requestMatchers(HttpMethod.OPTIONS)
             .permitAll()
-            .requestMatchers("/api/auth/**")
-            .permitAll()
-            .requestMatchers("/api/client/**")
-            .hasAuthority("Client")
+            .requestMatchers("/api/customer/**")
+            .hasAuthority("Customer")
             .anyRequest()
             .authenticated()
             .and()
@@ -56,5 +56,15 @@ class SecurityConfig(
             }
         }
     }
+
+    private val WHITELIST = arrayOf(
+        "/api/auth/**",
+        "/api/all/**",
+        "/v3/api-docs/**",
+        "/v3/api-docs.yaml",
+        "/swagger-ui/**",
+        "/swagger-ui.html"
+    )
+
 
 }

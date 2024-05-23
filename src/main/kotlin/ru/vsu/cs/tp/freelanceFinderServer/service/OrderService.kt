@@ -25,20 +25,61 @@ class OrderService @Autowired constructor(
         val scopes = scopeRepository.findAllByNameIn(orderDto.scopes)
         val curJwt = token.substring(7)
         val username = jwtService.extractUsername(curJwt)
-        val user = userRepository.findByUsername(username)
-        val order = Order(
-            0,
-            null,
-            user.orElseThrow(),
-            scopes,
-            orderDto.price,
-            orderDto.description,
-            LocalDateTime.now(),
-            0,
-            "Active",
-            orderDto.skills
-        )
-        return orderRepository.save(order)
+        val user = userRepository.findByUsername(username).orElseThrow()
+        val lastOrder = user.lastOrder
+
+        if (lastOrder == null || lastOrder.status == "Complete") {
+            val newOrder = Order(
+                0,
+                null,
+                user,
+                scopes,
+                orderDto.price,
+                orderDto.description,
+                LocalDateTime.now(),
+                0,
+                "Active",
+                orderDto.skills
+            )
+
+            user.lastOrder = newOrder
+
+            orderRepository.save(newOrder)
+            userRepository.save(user)
+
+            return newOrder
+        } else {
+            throw RuntimeException("Cannot create a new order. The last order is not complete.")
+        }
+    }
+
+    fun updateOrder(orderDto: OrderDTO, token: String): Order {
+        val curJwt = token.substring(7)
+        val username = jwtService.extractUsername(curJwt)
+        val user = userRepository.findByUsername(username).orElseThrow()
+
+        val order = user.lastOrder ?: throw RuntimeException("No order to update")
+
+        val scopes = scopeRepository.findAllByNameIn(orderDto.scopes)
+        order.scopes = scopes
+        order.price = orderDto.price
+        order.description = orderDto.description
+        order.skills = orderDto.skills
+
+        orderRepository.save(order)
+        return order
+    }
+
+    fun deleteOrder(token: String) {
+        val curJwt = token.substring(7)
+        val username = jwtService.extractUsername(curJwt)
+        val user = userRepository.findByUsername(username).orElseThrow()
+
+        val order = user.lastOrder ?: throw RuntimeException("No order to delete")
+
+        orderRepository.delete(order)
+        user.lastOrder = null
+        userRepository.save(user)
     }
 
 }
