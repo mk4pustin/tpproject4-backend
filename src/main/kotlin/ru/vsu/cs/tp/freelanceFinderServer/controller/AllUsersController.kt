@@ -7,6 +7,7 @@ import ru.vsu.cs.tp.freelanceFinderServer.model.Category
 import ru.vsu.cs.tp.freelanceFinderServer.model.Order
 import ru.vsu.cs.tp.freelanceFinderServer.model.User
 import ru.vsu.cs.tp.freelanceFinderServer.service.CategoryService
+import ru.vsu.cs.tp.freelanceFinderServer.service.OrderService
 import ru.vsu.cs.tp.freelanceFinderServer.service.UserService
 
 @RestController
@@ -14,13 +15,14 @@ import ru.vsu.cs.tp.freelanceFinderServer.service.UserService
 @Tag(name = "Контроллер для всех пользователей", description = "API для получения информации о заказах, фрилансерах и категориях")
 class AllUsersController(
     private val userService: UserService,
-    private val categoryService: CategoryService
+    private val categoryService: CategoryService,
+    private val orderService: OrderService
 ) {
 
     @GetMapping("/orders")
     @Operation(summary = "Получение активных заказов", description = "Возвращает список активных заказов")
     fun getActiveOrders(): List<Order> {
-        return userService.getActiveOrders()
+        return orderService.getActiveOrders()
     }
 
     @GetMapping("/freelancers")
@@ -32,7 +34,7 @@ class AllUsersController(
     @GetMapping("/orders/{id}")
     @Operation(summary = "Получение заказа по id", description = "Возвращает заказ с указанным id")
     fun getOrderById(@PathVariable id: Long): Order {
-        return userService.getOrderById(id)
+        return orderService.getOrderById(id)
     }
 
     @GetMapping("/freelancers/{id}")

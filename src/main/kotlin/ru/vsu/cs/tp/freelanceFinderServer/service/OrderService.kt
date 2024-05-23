@@ -21,11 +21,17 @@ class OrderService @Autowired constructor(
 
 ) {
 
+    fun getActiveOrders(): List<Order> {
+        return orderRepository.findAllByStatus("Active")
+    }
+
+    fun getOrderById(id: Long): Order {
+        return orderRepository.findById(id).orElseThrow()
+    }
+
     fun addOrder(orderDto: OrderDTO, token: String): Order {
         val scopes = scopeRepository.findAllByNameIn(orderDto.scopes)
-        val curJwt = token.substring(7)
-        val username = jwtService.extractUsername(curJwt)
-        val user = userRepository.findByUsername(username).orElseThrow()
+        val user = jwtService.getAuthenticatedUser(token)
         val lastOrder = user.lastOrder
 
         if (lastOrder == null || lastOrder.status == "Complete") {
@@ -54,9 +60,7 @@ class OrderService @Autowired constructor(
     }
 
     fun updateOrder(orderDto: OrderDTO, token: String): Order {
-        val curJwt = token.substring(7)
-        val username = jwtService.extractUsername(curJwt)
-        val user = userRepository.findByUsername(username).orElseThrow()
+        val user = jwtService.getAuthenticatedUser(token)
 
         val order = user.lastOrder ?: throw RuntimeException("No order to update")
 
@@ -70,16 +74,40 @@ class OrderService @Autowired constructor(
         return order
     }
 
-    fun deleteOrder(token: String) {
-        val curJwt = token.substring(7)
-        val username = jwtService.extractUsername(curJwt)
-        val user = userRepository.findByUsername(username).orElseThrow()
+    fun deleteOwnOrder(token: String) {
+        val user = jwtService.getAuthenticatedUser(token)
 
         val order = user.lastOrder ?: throw RuntimeException("No order to delete")
 
+        val freelancer = order.freelancer
+
         orderRepository.delete(order)
         user.lastOrder = null
+        if (freelancer != null) {
+            freelancer.lastOrder = null
+        }
         userRepository.save(user)
+        if (freelancer != null) {
+            userRepository.save(freelancer)
+        }
+    }
+
+    fun deleteOrderByAdmin(orderId: Long) {
+
+        val order = orderRepository.findById(orderId)
+        val orderer = order.get().orderer
+        val freelancer = order.get().freelancer
+
+        orderRepository.delete(order.orElseThrow())
+        orderer.lastOrder = null
+        if (freelancer != null) {
+            freelancer.lastOrder = null
+        }
+
+        userRepository.save(orderer)
+        if (freelancer != null) {
+            userRepository.save(freelancer)
+        }
     }
 
 }

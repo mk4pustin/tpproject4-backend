@@ -7,6 +7,7 @@ data class UserDTO(
     val password: String?,
     val aboutMe: String?,
     val contact: String?,
-    val skills: String?
+    val skills: String?,
+    val scopes: List<String>?
 
 )

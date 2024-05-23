@@ -9,58 +9,29 @@ import ru.vsu.cs.tp.freelanceFinderServer.model.Order
 import ru.vsu.cs.tp.freelanceFinderServer.model.User
 import ru.vsu.cs.tp.freelanceFinderServer.repository.ClaimRepository
 import ru.vsu.cs.tp.freelanceFinderServer.repository.OrderRepository
+import ru.vsu.cs.tp.freelanceFinderServer.repository.ScopeRepository
 import ru.vsu.cs.tp.freelanceFinderServer.repository.UserRepository
 import java.time.LocalDateTime
 
 @Service
 class UserService @Autowired constructor(
 
-    private val orderRepository: OrderRepository,
     private val userRepository: UserRepository,
-    private val claimRepository: ClaimRepository,
+    private val scopeRepository: ScopeRepository,
     private val jwtService: JwtService
 
 ) {
 
-    fun getActiveOrders(): List<Order> {
-        return orderRepository.findAllByStatus("Active")
-    }
-
     fun getFreelancers(): List<User> {
         return userRepository.findAllByRoleName("Freelancer")
-    }
-
-    fun getOrderById(id: Long): Order {
-        return orderRepository.findById(id).orElseThrow()
     }
 
     fun getUserById(id: Long): User {
         return userRepository.findById(id).orElseThrow()
     }
 
-    fun addClaim(claimDto: ClaimDTO, token: String): Claim {
-        val curJwt = token.substring(7)
-        val username = jwtService.extractUsername(curJwt)
-        val user = userRepository.findByUsername(username)
-        val claim = Claim(
-            0,
-            user.orElseThrow(),
-            userRepository.findById(claimDto.userId).orElseThrow(),
-            null,
-            claimDto.orderId?.let { orderRepository.findById(it).orElseThrow() },
-            claimDto.description,
-            LocalDateTime.now(),
-            "Active",
-            null
-        )
-        return claimRepository.save(claim)
-    }
-
     fun updateUserProfile(userDto: UserDTO, token: String): User {
-        val curJwt = token.substring(7)
-        val username = jwtService.extractUsername(curJwt)
-        val user = userRepository.findByUsername(username).orElseThrow()
-
+        val user = jwtService.getAuthenticatedUser(token)
         userDto.username?.let { user.username = it }
         userDto.email?.let { user.email = it }
         userDto.password?.let { user.password = it }
@@ -68,8 +39,18 @@ class UserService @Autowired constructor(
         userDto.contact?.let { user.contact = it }
         userDto.skills?.let { user.skills = it }
 
+        userDto.scopes?.let { scopeNames ->
+            val scopes = scopeRepository.findAllByNameIn(scopeNames)
+            user.scopes = scopes
+        }
+
         userRepository.save(user)
         return user
+    }
+
+    fun deleteUser(userId: Long) {
+        val user = userRepository.findById(userId).orElseThrow()
+        userRepository.delete(user)
     }
 
 }
