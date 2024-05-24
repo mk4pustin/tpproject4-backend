@@ -7,5 +7,7 @@ import org.springframework.boot.runApplication
 class FreelanceFinderServerApplication
 
 fun main(args: Array<String>) {
+
 	runApplication<FreelanceFinderServerApplication>(*args)
+
 }

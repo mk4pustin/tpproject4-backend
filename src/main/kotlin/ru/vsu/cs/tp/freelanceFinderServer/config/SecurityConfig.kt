@@ -45,18 +45,6 @@ class SecurityConfig(
         return http.build()
     }
 
-    @Bean
-    fun corsConfigurer(): WebMvcConfigurer {
-        return object : WebMvcConfigurer {
-            override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/**")
-                    .allowedMethods("*")
-                    .allowedHeaders("*")
-                    .allowedOriginPatterns(CorsConfiguration.ALL)
-            }
-        }
-    }
-
     private val WHITELIST = arrayOf(
         "/api/auth/**",
         "/api/all/**",
@@ -65,6 +53,5 @@ class SecurityConfig(
         "/swagger-ui/**",
         "/swagger-ui.html"
     )
-
 
 }
