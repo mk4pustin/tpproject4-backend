@@ -8,6 +8,7 @@ import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
@@ -79,7 +80,7 @@ class JwtService(
                 .parseClaimsJws(token)
                 .body
         } catch (e: Exception) {
-            throw RuntimeException("Failed to extract claims from token", e)
+            throw BadCredentialsException("Failed to extract claims from token", e)
         }
     }
 

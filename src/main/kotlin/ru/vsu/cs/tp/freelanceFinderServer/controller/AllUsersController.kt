@@ -2,10 +2,13 @@ package ru.vsu.cs.tp.freelanceFinderServer.controller
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import ru.vsu.cs.tp.freelanceFinderServer.dto.AccountRecoveryRequest
 import ru.vsu.cs.tp.freelanceFinderServer.model.Category
 import ru.vsu.cs.tp.freelanceFinderServer.model.Order
 import ru.vsu.cs.tp.freelanceFinderServer.model.User
+import ru.vsu.cs.tp.freelanceFinderServer.service.AuthenticationService
 import ru.vsu.cs.tp.freelanceFinderServer.service.CategoryService
 import ru.vsu.cs.tp.freelanceFinderServer.service.OrderService
 import ru.vsu.cs.tp.freelanceFinderServer.service.UserService
@@ -16,7 +19,9 @@ import ru.vsu.cs.tp.freelanceFinderServer.service.UserService
 class AllUsersController(
     private val userService: UserService,
     private val categoryService: CategoryService,
-    private val orderService: OrderService
+    private val orderService: OrderService,
+    private val authenticationService: AuthenticationService
+
 ) {
 
     @GetMapping("/orders")
@@ -47,6 +52,13 @@ class AllUsersController(
     @Operation(summary = "Получение категорий с областью деятельности", description = "Возвращает список категорий с указанной областью деятельности")
     fun getAllCategoriesWithScopes(): List<Category> {
         return categoryService.getAllCategoriesWithScopes()
+    }
+
+    @PostMapping("/recover-account")
+    @Operation(summary = "Восстановление аккаунта", description = "Отправляет ссылку для восстановления аккаунта на указанный email")
+    fun recoverAccount(@RequestBody request: AccountRecoveryRequest): ResponseEntity<Void> {
+        authenticationService.recoverAccount(request)
+        return ResponseEntity.ok().build()
     }
 
 }

@@ -4,6 +4,7 @@ import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -45,11 +46,13 @@ class JwtAuthenticationFilter(
             }
         } catch (e: ExpiredJwtException) {
             SecurityContextHolder.clearContext()
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired")
+            response.status = HttpServletResponse.SC_UNAUTHORIZED
+            response.writer.println("Token expired")
             return
-        } catch (e: Exception) {
+        } catch (e: BadCredentialsException) {
             SecurityContextHolder.clearContext()
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token")
+            response.status = HttpServletResponse.SC_UNAUTHORIZED
+            response.writer.println("Invalid token")
             return
         }
         filterChain.doFilter(request, response)
