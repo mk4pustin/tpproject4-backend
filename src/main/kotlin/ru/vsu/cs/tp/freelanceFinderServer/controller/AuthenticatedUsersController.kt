@@ -6,10 +6,13 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import ru.vsu.cs.tp.freelanceFinderServer.dto.ClaimDTO
+import ru.vsu.cs.tp.freelanceFinderServer.dto.OrderCommentDTO
 import ru.vsu.cs.tp.freelanceFinderServer.dto.UserDTO
 import ru.vsu.cs.tp.freelanceFinderServer.model.Claim
+import ru.vsu.cs.tp.freelanceFinderServer.model.OrderComment
 import ru.vsu.cs.tp.freelanceFinderServer.model.User
 import ru.vsu.cs.tp.freelanceFinderServer.service.ClaimService
+import ru.vsu.cs.tp.freelanceFinderServer.service.OrderService
 import ru.vsu.cs.tp.freelanceFinderServer.service.UserService
 
 @RestController
@@ -18,7 +21,8 @@ import ru.vsu.cs.tp.freelanceFinderServer.service.UserService
 @Tag(name = "Контроллер для аутентифицированных пользователей", description = "API для создания заявок и обновления профиля пользователя")
 class AuthenticatedUsersController(
     private val userService: UserService,
-    private val claimService: ClaimService
+    private val claimService: ClaimService,
+    private val orderService: OrderService
 ) {
 
     @PostMapping("/createClaim")
@@ -33,6 +37,13 @@ class AuthenticatedUsersController(
     @ResponseStatus(HttpStatus.OK)
     fun updateProfile(@RequestBody userDto: UserDTO, @RequestHeader("Authorization") token: String): User {
         return userService.updateUserProfile(userDto, token)
+    }
+
+    @PostMapping("/addComment")
+    @Operation(summary = "Добавление комментария к заказу", description = "Добавляет комментарий к заказу от исполнителя или заказчика")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun addComment(@RequestBody orderCommentDto: OrderCommentDTO, @RequestHeader("Authorization") token: String): OrderComment {
+        return orderService.addComment(orderCommentDto, token)
     }
 
 }
