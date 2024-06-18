@@ -23,7 +23,7 @@ data class Response(
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     val user: User,
 
-    val status: String,
+    var status: String,
 
     val creationDate: LocalDateTime
 

@@ -43,7 +43,7 @@ data class Order(
 
     val responsesCount: Int,
 
-    val status: String,
+    var status: String,
 
     var skills: String
 

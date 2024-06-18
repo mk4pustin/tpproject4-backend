@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import ru.vsu.cs.tp.freelanceFinderServer.dto.OrderDTO
 import ru.vsu.cs.tp.freelanceFinderServer.model.Order
+import ru.vsu.cs.tp.freelanceFinderServer.model.Response
 import ru.vsu.cs.tp.freelanceFinderServer.service.OrderService
 
 @RestController
@@ -36,6 +37,24 @@ class CustomerController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteOrder(@RequestHeader("Authorization") token: String) {
         orderService.deleteOwnOrder(token)
+    }
+
+    @PostMapping("/respondToRequest/{responseId}")
+    @Operation(summary = "Решение запроса", description = "Подтверждает или отклоняет запрос фрилансера на выполнение заказа")
+    @ResponseStatus(HttpStatus.OK)
+    fun respondToRequest(
+        @PathVariable responseId: Long,
+        @RequestParam decision: Boolean,
+        @RequestHeader("Authorization") token: String
+    ): Response {
+        return orderService.respondToRequest(responseId, decision, token)
+    }
+
+    @GetMapping("/myOrders")
+    @Operation(summary = "Получение всех заказов", description = "Получает все заказы, где пользователь является заказчиком")
+    @ResponseStatus(HttpStatus.OK)
+    fun getMyOrders(@RequestHeader("Authorization") token: String): List<Order> {
+        return orderService.getOrdersByCustomer(token)
     }
 
 }
