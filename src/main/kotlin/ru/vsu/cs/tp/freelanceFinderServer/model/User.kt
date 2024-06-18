@@ -84,6 +84,7 @@ data class User(
         return true
     }
 
+    @JsonIgnore
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return Collections.singletonList(role)
     }
