@@ -43,6 +43,7 @@ class OrderService @Autowired constructor(
                 null,
                 user,
                 scopes,
+                orderDto.title,
                 orderDto.price,
                 orderDto.description,
                 LocalDateTime.now(),

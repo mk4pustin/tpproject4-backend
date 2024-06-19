@@ -35,6 +35,8 @@ data class Order(
     )
     var scopes: List<Scope>,
 
+    var title: String,
+
     var price: Double,
 
     var description: String,
