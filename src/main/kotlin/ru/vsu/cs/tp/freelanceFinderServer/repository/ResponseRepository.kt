@@ -9,4 +9,6 @@ interface ResponseRepository : JpaRepository<Response, Long> {
 
     fun existsByUserAndOrder(user: User, order: Order): Boolean
 
+    fun findByOrderId(orderId: Long): List<Response>
+
 }
