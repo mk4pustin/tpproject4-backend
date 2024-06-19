@@ -130,17 +130,24 @@ class OrderService @Autowired constructor(
             status = "Requested",
             creationDate = LocalDateTime.now()
         )
+
+        order.responsesCount++;
+
         return responseRepository.save(response)
     }
 
 
     fun respondToRequest(responseId: Long, decision: Boolean, token: String): Response {
         val customer = jwtService.getAuthenticatedUser(token)
-        val response = responseRepository.findById(responseId).orElseThrow()
+        val response = responseRepository.findById(responseId).orElseThrow { RuntimeException("Response not found") }
         val order = response.order
 
         if (order.orderer != customer) {
             throw RuntimeException("Unauthorized action")
+        }
+
+        if (decision && (order.freelancer?.lastOrder?.status != "Complete")) {
+            throw RuntimeException("Cannot confirm response because the freelancer's last order is not complete")
         }
 
         response.status = if (decision) "Confirmed" else "Rejected"
@@ -149,9 +156,11 @@ class OrderService @Autowired constructor(
             order.orderer.lastOrder = order
             order.freelancer?.lastOrder = order
             userRepository.save(order.orderer)
-            if (order.freelancer != null) {
-                userRepository.save(order.freelancer)
-            }
+            order.freelancer?.let { userRepository.save(it) }
+            
+            val otherResponses = responseRepository.findByOrderId(order.id).filter { otherResponse -> otherResponse.id != responseId }
+            otherResponses.forEach { otherResponse -> otherResponse.status = "Rejected" }
+            responseRepository.saveAll(otherResponses)
         }
 
         return responseRepository.save(response)

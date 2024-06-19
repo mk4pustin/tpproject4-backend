@@ -43,7 +43,7 @@ data class Order(
 
     val creationDate: LocalDateTime,
 
-    val responsesCount: Int,
+    var responsesCount: Int,
 
     var status: String,
 
