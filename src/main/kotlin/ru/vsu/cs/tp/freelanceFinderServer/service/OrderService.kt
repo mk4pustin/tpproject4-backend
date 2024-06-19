@@ -114,9 +114,15 @@ class OrderService @Autowired constructor(
         }
     }
 
+    @Throws(IllegalStateException::class)
     fun requestOrder(orderId: Long, token: String): Response {
         val user = jwtService.getAuthenticatedUser(token)
         val order = orderRepository.findById(orderId).orElseThrow()
+
+        if (responseRepository.existsByUserAndOrder(user, order)) {
+            throw IllegalStateException("Response already exists for this user and order")
+        }
+
         val response = Response(
             0,
             order = order,
@@ -126,6 +132,7 @@ class OrderService @Autowired constructor(
         )
         return responseRepository.save(response)
     }
+
 
     fun respondToRequest(responseId: Long, decision: Boolean, token: String): Response {
         val customer = jwtService.getAuthenticatedUser(token)
