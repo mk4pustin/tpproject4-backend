@@ -32,16 +32,17 @@ class UserService @Autowired constructor(
 
     fun updateUserProfile(userDto: UserDTO, token: String): User {
         val user = jwtService.getAuthenticatedUser(token)
-        userDto.username?.let { user.username = it }
-        userDto.email?.let { user.email = it }
-        userDto.password?.let { user.password = it }
-        userDto.aboutMe?.let { user.aboutMe = it }
-        userDto.contact?.let { user.contact = it }
-        userDto.skills?.let { user.skills = it }
-        userDto.price?.let { user.price = it }
-        userDto.ordersCount?.let { user.ordersCount = it }
 
-        userDto.scopes?.let { scopeNames ->
+        userDto.username?.takeIf { it.isNotEmpty() }?.let { user.username = it }
+        userDto.email?.takeIf { it.isNotEmpty() }?.let { user.email = it }
+        userDto.password?.takeIf { it.isNotEmpty() }?.let { user.password = it }
+        userDto.aboutMe?.takeIf { it.isNotEmpty() }?.let { user.aboutMe = it }
+        userDto.contact?.takeIf { it.isNotEmpty() }?.let { user.contact = it }
+        userDto.skills?.takeIf { it.isNotEmpty() }?.let { user.skills = it }
+        userDto.price?.let { if (it.toString().isNotEmpty()) user.price = it }
+        userDto.ordersCount?.let { if (it.toString().isNotEmpty()) user.ordersCount = it }
+
+        userDto.scopes?.takeIf { it.isNotEmpty() }?.let { scopeNames ->
             val scopes = scopeRepository.findAllByNameIn(scopeNames)
             user.scopes = scopes
         }
@@ -49,6 +50,7 @@ class UserService @Autowired constructor(
         userRepository.save(user)
         return user
     }
+
 
     fun deleteUser(userId: Long) {
         val user = userRepository.findById(userId).orElseThrow()
