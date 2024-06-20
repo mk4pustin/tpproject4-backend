@@ -39,13 +39,6 @@ class AdminController(
         return claimService.completeClaim(claimId, completeClaimDto, token)
     }
 
-    @DeleteMapping("/users/{userId}")
-    @Operation(summary = "Удаление пользователя", description = "Удаляет пользователя по его ID")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteUser(@PathVariable userId: Long) {
-        userService.deleteUser(userId)
-    }
-
     @DeleteMapping("/orders/{orderId}")
     @Operation(summary = "Удаление заказа", description = "Удаляет заказ по его ID")
     @ResponseStatus(HttpStatus.NO_CONTENT)
