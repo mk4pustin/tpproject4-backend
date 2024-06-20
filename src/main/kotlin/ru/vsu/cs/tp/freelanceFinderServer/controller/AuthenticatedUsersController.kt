@@ -46,4 +46,11 @@ class AuthenticatedUsersController(
         return orderService.addComment(orderCommentDto, token)
     }
 
+    @DeleteMapping("/users/{userId}")
+    @Operation(summary = "Удаление пользователя", description = "Удаляет пользователя по его ID")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteUser(@PathVariable userId: Long) {
+        userService.deleteUser(userId)
+    }
+
 }
