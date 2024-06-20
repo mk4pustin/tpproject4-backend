@@ -64,7 +64,11 @@ data class User(
 
     val rating: Double? = null,
 
-    var skills: String? = null
+    var skills: String? = null,
+
+    var price: Double? = null,
+
+    var ordersCount: Int = 0
 
 ): UserDetails {
 

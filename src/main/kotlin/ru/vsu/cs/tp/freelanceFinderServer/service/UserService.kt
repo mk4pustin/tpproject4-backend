@@ -38,6 +38,8 @@ class UserService @Autowired constructor(
         userDto.aboutMe?.let { user.aboutMe = it }
         userDto.contact?.let { user.contact = it }
         userDto.skills?.let { user.skills = it }
+        userDto.price?.let { user.price = it }
+        userDto.ordersCount?.let { user.ordersCount = it }
 
         userDto.scopes?.let { scopeNames ->
             val scopes = scopeRepository.findAllByNameIn(scopeNames)
