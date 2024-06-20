@@ -8,6 +8,8 @@ data class UserDTO(
     val aboutMe: String?,
     val contact: String?,
     val skills: String?,
-    val scopes: List<String>?
+    val scopes: List<String>?,
+    var price: Double?,
+    var ordersCount: Int?
 
 )

@@ -42,6 +42,12 @@ class AllUsersController(
         return orderService.getOrderById(id)
     }
 
+    @GetMapping("/users/{id}/orders")
+    @Operation(summary = "Получение всех заказов пользователя по id", description = "Возвращает список всех заказов пользователя с указанным id")
+    fun getOrdersByUserId(@PathVariable id: Long): List<Order> {
+        return orderService.getOrdersByUserId(id)
+    }
+
     @GetMapping("/freelancers/{id}")
     @Operation(summary = "Получение фрилансера по id", description = "Возвращает фрилансера с указанным id")
     fun getUserById(@PathVariable id: Long): User {

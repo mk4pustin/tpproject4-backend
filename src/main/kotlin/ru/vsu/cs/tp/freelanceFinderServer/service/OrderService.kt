@@ -63,6 +63,15 @@ class OrderService @Autowired constructor(
         }
     }
 
+    fun getOrdersByUserId(userId: Long): List<Order> {
+        val user = userRepository.findById(userId).orElseThrow { RuntimeException("User not found") }
+        return if (user.role.name == "Freelancer") {
+            orderRepository.findAllByFreelancer(user)
+        } else {
+            orderRepository.findAllByOrderer(user)
+        }
+    }
+
     fun updateOrder(orderDto: OrderDTO, token: String): Order {
         val user = jwtService.getAuthenticatedUser(token)
 
@@ -155,9 +164,11 @@ class OrderService @Autowired constructor(
         if (decision) {
             order.orderer.lastOrder = order
             order.freelancer?.lastOrder = order
+            order.orderer.ordersCount++
+            order.freelancer?.ordersCount = order.freelancer?.ordersCount!! + 1
             userRepository.save(order.orderer)
-            order.freelancer?.let { userRepository.save(it) }
-            
+            order.freelancer.let { userRepository.save(it) }
+
             val otherResponses = responseRepository.findByOrderId(order.id).filter { otherResponse -> otherResponse.id != responseId }
             otherResponses.forEach { otherResponse -> otherResponse.status = "Rejected" }
             responseRepository.saveAll(otherResponses)
