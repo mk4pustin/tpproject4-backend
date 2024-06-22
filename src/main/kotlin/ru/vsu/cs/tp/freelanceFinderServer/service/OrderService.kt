@@ -155,7 +155,7 @@ class OrderService @Autowired constructor(
             throw RuntimeException("Unauthorized action")
         }
 
-        if (decision && (order.freelancer?.lastOrder?.status != "Complete")) {
+        if (decision && (order.freelancer?.lastOrder != null && order.freelancer.lastOrder?.status != "Complete")) {
             throw RuntimeException("Cannot confirm response because the freelancer's last order is not complete")
         }
 
@@ -212,6 +212,22 @@ class OrderService @Autowired constructor(
         if (hasFreelancerComment && hasOrdererComment) {
             order.status = "Completed"
             orderRepository.save(order)
+        }
+
+        val reviewedUser = if (order.freelancer == user) order.orderer else order.freelancer
+        val relevantComments = orderCommentRepository.findByOrder(order).filter { it.user != reviewedUser }
+        val averageRating = relevantComments.map { it.rating }.average()
+
+        if (reviewedUser != null) {
+            if (reviewedUser.rating != null) {
+                reviewedUser.rating = averageRating
+            }else{
+                reviewedUser.rating = orderCommentDto.rating.toDouble()
+            }
+        }
+
+        if (reviewedUser != null) {
+            userRepository.save(reviewedUser)
         }
 
         return orderComment
