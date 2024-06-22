@@ -62,7 +62,7 @@ data class User(
 
     var lastOnline: LocalDateTime? = null,
 
-    val rating: Double? = null,
+    var rating: Double? = null,
 
     var skills: String? = null,
 
