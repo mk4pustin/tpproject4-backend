@@ -159,7 +159,13 @@ class OrderService @Autowired constructor(
             throw RuntimeException("Cannot confirm response because the freelancer's last order is not complete")
         }
 
-        response.status = if (decision) "Confirmed" else "Rejected"
+        if (decision){
+            response.status =  "Confirmed"
+            order.status = "In work"
+        }
+        else{
+            response.status = "Rejected"
+        }
 
         if (decision) {
             order.freelancer = response.user
