@@ -19,9 +19,9 @@ data class Order(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
 
-    @OneToOne(mappedBy = "lastOrder")
+    @OneToOne
     @JoinColumn(name = "freelancer_id", referencedColumnName = "id")
-    val freelancer: User?,
+    var freelancer: User?,
 
     @OneToOne
     @JoinColumn(name = "orderer_id", referencedColumnName = "id")
