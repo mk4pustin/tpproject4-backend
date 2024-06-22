@@ -155,7 +155,7 @@ class OrderService @Autowired constructor(
             throw RuntimeException("Unauthorized action")
         }
 
-        if (decision && (order.freelancer?.lastOrder != null && order.freelancer.lastOrder?.status != "Complete")) {
+        if (order.freelancer?.lastOrder != null && order.freelancer.lastOrder?.status != "Complete") {
             throw RuntimeException("Cannot confirm response because the freelancer's last order is not complete")
         }
 
