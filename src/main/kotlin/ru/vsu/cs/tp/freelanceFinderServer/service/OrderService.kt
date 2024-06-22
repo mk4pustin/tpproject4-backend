@@ -217,4 +217,58 @@ class OrderService @Autowired constructor(
         return orderComment
     }
 
+    fun getRequestsForOrder(orderId: Long, token: String): List<Response> {
+        val customer = jwtService.getAuthenticatedUser(token)
+        val order = orderRepository.findById(orderId).orElseThrow { RuntimeException("Order not found") }
+
+        if (order.orderer != customer) {
+            throw RuntimeException("Unauthorized action")
+        }
+
+        return responseRepository.findByOrderIdAndStatus(orderId, "Requested")
+    }
+
+    fun getOffersForOrder(orderId: Long, token: String): List<Response> {
+        val customer = jwtService.getAuthenticatedUser(token)
+        val order = orderRepository.findById(orderId).orElseThrow { RuntimeException("Order not found") }
+
+        if (order.orderer != customer) {
+            throw RuntimeException("Unauthorized action")
+        }
+
+        return responseRepository.findByOrderIdAndStatus(orderId, "Offered")
+    }
+
+    fun offerRequest(orderId: Long, freelancerId: Long, token: String): Response {
+        val customer = jwtService.getAuthenticatedUser(token)
+        val order = orderRepository.findById(orderId).orElseThrow { RuntimeException("Order not found") }
+        val freelancer = userRepository.findById(freelancerId).orElseThrow { RuntimeException("Freelancer not found") }
+
+        if (order.orderer != customer) {
+            throw RuntimeException("Unauthorized action")
+        }
+
+        val response = Response(
+            id = 0,
+            order = order,
+            user = freelancer,
+            status = "Offered",
+            creationDate = LocalDateTime.now()
+        )
+
+        order.responsesCount++
+
+        return responseRepository.save(response)
+    }
+
+    fun getOfferedOrders(token: String): List<Response> {
+        val freelancer = jwtService.getAuthenticatedUser(token)
+        return responseRepository.findByUserIdAndStatus(freelancer.id, "Offered")
+    }
+
+    fun getMyResponses(token: String): List<Response> {
+        val freelancer = jwtService.getAuthenticatedUser(token)
+        return responseRepository.findByUserIdAndStatus(freelancer.id, "Requested")
+    }
+
 }
