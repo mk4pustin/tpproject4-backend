@@ -155,19 +155,24 @@ class OrderService @Autowired constructor(
             throw RuntimeException("Unauthorized action")
         }
 
-        if (order.freelancer?.lastOrder != null && order.freelancer.lastOrder?.status != "Complete") {
+        if (order.freelancer?.lastOrder != null && order.freelancer!!.lastOrder?.status != "Complete") {
             throw RuntimeException("Cannot confirm response because the freelancer's last order is not complete")
         }
 
         response.status = if (decision) "Confirmed" else "Rejected"
 
         if (decision) {
+            order.freelancer = response.user
             order.orderer.lastOrder = order
             order.freelancer?.lastOrder = order
             order.orderer.ordersCount++
             order.freelancer?.ordersCount = order.freelancer?.ordersCount!! + 1
             userRepository.save(order.orderer)
-            order.freelancer.let { userRepository.save(it) }
+            order.freelancer.let {
+                if (it != null) {
+                    userRepository.save(it)
+                }
+            }
 
             val otherResponses = responseRepository.findByOrderId(order.id).filter { otherResponse -> otherResponse.id != responseId }
             otherResponses.forEach { otherResponse -> otherResponse.status = "Rejected" }
