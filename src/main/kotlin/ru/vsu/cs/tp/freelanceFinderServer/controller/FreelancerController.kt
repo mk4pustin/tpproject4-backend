@@ -31,4 +31,19 @@ class FreelancerController(
         return orderService.getOrdersByFreelancer(token)
     }
 
+
+    @GetMapping("/offeredOrders")
+    @Operation(summary = "Получение предложенных заказов", description = "Получает все заказы, предложенные фрилансеру")
+    @ResponseStatus(HttpStatus.OK)
+    fun getOfferedOrders(@RequestHeader("Authorization") token: String): List<Response> {
+        return orderService.getOfferedOrders(token)
+    }
+
+    @GetMapping("/myResponses")
+    @Operation(summary = "Получение собственных откликов", description = "Получает все отклики фрилансера на заказы")
+    @ResponseStatus(HttpStatus.OK)
+    fun getMyResponses(@RequestHeader("Authorization") token: String): List<Response> {
+        return orderService.getMyResponses(token)
+    }
+
 }

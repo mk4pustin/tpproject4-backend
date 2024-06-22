@@ -17,7 +17,6 @@ import ru.vsu.cs.tp.freelanceFinderServer.service.UserService
 @Tag(name = "Контроллер для администраторов", description = "API для обработки жалоб и удаления запрещенного контента")
 class AdminController(
 
-    private val userService: UserService,
     private val claimService: ClaimService,
     private val orderService: OrderService,
 

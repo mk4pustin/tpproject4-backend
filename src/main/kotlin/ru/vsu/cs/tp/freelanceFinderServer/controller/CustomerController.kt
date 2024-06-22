@@ -57,4 +57,29 @@ class CustomerController(
         return orderService.getOrdersByCustomer(token)
     }
 
+    @GetMapping("/requests/{orderId}")
+    @Operation(summary = "Получение всех запросов на заказ", description = "Получает все запросы на выполнение заказа с указанным ID, которые имеют статус 'Requested'")
+    @ResponseStatus(HttpStatus.OK)
+    fun getRequestsForOrder(@PathVariable orderId: Long, @RequestHeader("Authorization") token: String): List<Response> {
+        return orderService.getRequestsForOrder(orderId, token)
+    }
+
+    @GetMapping("/offers/{orderId}")
+    @Operation(summary = "Получение всех своих предложений заказа", description = "Получает все предложения выполнения заказа с указанным ID, которые имеют статус 'Offered'")
+    @ResponseStatus(HttpStatus.OK)
+    fun getOffersForOrder(@PathVariable orderId: Long, @RequestHeader("Authorization") token: String): List<Response> {
+        return orderService.getOffersForOrder(orderId, token)
+    }
+
+    @PostMapping("/offerRequest")
+    @Operation(summary = "Предложение запроса", description = "Создает запрос со статусом 'Offered' для фрилансера на выполнение заказа")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun offerRequest(
+        @RequestParam orderId: Long,
+        @RequestParam freelancerId: Long,
+        @RequestHeader("Authorization") token: String
+    ): Response {
+        return orderService.offerRequest(orderId, freelancerId, token)
+    }
+
 }

@@ -11,4 +11,8 @@ interface ResponseRepository : JpaRepository<Response, Long> {
 
     fun findByOrderId(orderId: Long): List<Response>
 
+    fun findByOrderIdAndStatus(orderId: Long, status: String): List<Response>
+
+    fun findByUserIdAndStatus(userId: Long, status: String): List<Response>
+
 }
